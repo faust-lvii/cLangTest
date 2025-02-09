@@ -232,8 +232,28 @@ bool mm_check_leaks(void) {
     if (!g_is_initialized) return false;
 
     EnterCriticalSection(&g_global_mutex);
-    bool has_leaks = (g_stats.total_allocations != g_stats.total_frees) || (g_stats.current_used != 0);
-    LeaveCriticalSection(&g_global_mutex);
+    
+    // Tüm havuzları kontrol et
+    bool has_leaks = false;
+    for (int i = 0; i < MM_MAX_POOLS; i++) {
+        if (!g_pools[i].is_initialized) continue;
 
+        EnterCriticalSection(&g_pools[i].mutex);
+        
+        // Havuzdaki tüm blokları kontrol et
+        block_header_t* current = g_pools[i].first_block;
+        while (current) {
+            if (!current->is_free) {
+                has_leaks = true;
+                break;
+            }
+            current = current->next;
+        }
+        
+        LeaveCriticalSection(&g_pools[i].mutex);
+        if (has_leaks) break;
+    }
+    
+    LeaveCriticalSection(&g_global_mutex);
     return has_leaks;
 } 
