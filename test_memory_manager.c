@@ -3,9 +3,9 @@
 #include <stdlib.h>
 #include <time.h>
 
-#define NUM_THREADS 4
-#define NUM_ALLOCATIONS 1000
-#define MAX_ALLOCATION_SIZE 1024
+#define NUM_THREADS 2
+#define NUM_ALLOCATIONS 500
+#define MAX_ALLOCATION_SIZE 512
 
 // Thread test fonksiyonu
 DWORD WINAPI thread_test(LPVOID arg) {

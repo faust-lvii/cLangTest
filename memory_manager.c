@@ -209,15 +209,15 @@ mm_stats_t mm_get_stats(void) {
 
 void mm_print_stats(void) {
     mm_stats_t stats = mm_get_stats();
-    printf("\n=== Bellek Yönetici İstatistikleri ===\n");
-    printf("Toplam ayrılan bellek: %llu bytes\n", (unsigned long long)stats.total_allocated);
-    printf("Şu an kullanılan bellek: %llu bytes\n", (unsigned long long)stats.current_used);
-    printf("En yüksek kullanım: %llu bytes\n", (unsigned long long)stats.peak_used);
-    printf("Toplam allocation sayısı: %llu\n", (unsigned long long)stats.total_allocations);
-    printf("Toplam free sayısı: %llu\n", (unsigned long long)stats.total_frees);
-    printf("Aktif allocation sayısı: %llu\n", 
-           (unsigned long long)(stats.total_allocations - stats.total_frees));
-    printf("===================================\n\n");
+    printf("\n=== Memory Manager Statistics ===\n");
+    printf("Total allocated memory: %I64u bytes\n", (uint64_t)stats.total_allocated);
+    printf("Currently used memory: %I64u bytes\n", (uint64_t)stats.current_used);
+    printf("Peak memory usage: %I64u bytes\n", (uint64_t)stats.peak_used);
+    printf("Total allocations: %I64u\n", (uint64_t)stats.total_allocations);
+    printf("Total frees: %I64u\n", (uint64_t)stats.total_frees);
+    printf("Active allocations: %I64u\n", 
+           (uint64_t)(stats.total_allocations - stats.total_frees));
+    printf("==============================\n\n");
 }
 
 bool mm_check_leaks(void) {

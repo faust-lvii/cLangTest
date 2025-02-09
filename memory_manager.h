@@ -6,9 +6,9 @@
 #include <windows.h>
 
 // Bellek havuzu yapılandırma sabitleri
-#define MM_POOL_INITIAL_SIZE (1024 * 1024)  // 1MB başlangıç boyutu
-#define MM_BLOCK_MIN_SIZE 16                // Minimum blok boyutu
-#define MM_MAX_POOLS 16                     // Maksimum havuz sayısı
+#define MM_POOL_INITIAL_SIZE (16 * 1024 * 1024)  // 16MB başlangıç boyutu
+#define MM_BLOCK_MIN_SIZE 16                     // Minimum blok boyutu
+#define MM_MAX_POOLS 16                          // Maksimum havuz sayısı
 
 // Hata kodları
 typedef enum {
