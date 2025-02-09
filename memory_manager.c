@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdint.h>
 
 // Bellek bloğu başlık yapısı
 typedef struct block_header {
@@ -209,11 +210,22 @@ mm_stats_t mm_get_stats(void) {
 void mm_print_stats(void) {
     mm_stats_t stats = mm_get_stats();
     printf("\n=== Bellek Yönetici İstatistikleri ===\n");
-    printf("Toplam ayrılan bellek: %zu bytes\n", stats.total_allocated);
-    printf("Şu an kullanılan bellek: %zu bytes\n", stats.current_used);
-    printf("En yüksek kullanım: %zu bytes\n", stats.peak_used);
-    printf("Toplam allocation sayısı: %zu\n", stats.total_allocations);
-    printf("Toplam free sayısı: %zu\n", stats.total_frees);
-    printf("Aktif allocation sayısı: %zu\n", stats.total_allocations - stats.total_frees);
+    printf("Toplam ayrılan bellek: %llu bytes\n", (unsigned long long)stats.total_allocated);
+    printf("Şu an kullanılan bellek: %llu bytes\n", (unsigned long long)stats.current_used);
+    printf("En yüksek kullanım: %llu bytes\n", (unsigned long long)stats.peak_used);
+    printf("Toplam allocation sayısı: %llu\n", (unsigned long long)stats.total_allocations);
+    printf("Toplam free sayısı: %llu\n", (unsigned long long)stats.total_frees);
+    printf("Aktif allocation sayısı: %llu\n", 
+           (unsigned long long)(stats.total_allocations - stats.total_frees));
     printf("===================================\n\n");
+}
+
+bool mm_check_leaks(void) {
+    if (!g_is_initialized) return false;
+
+    EnterCriticalSection(&g_global_mutex);
+    bool has_leaks = (g_stats.total_allocations != g_stats.total_frees) || (g_stats.current_used != 0);
+    LeaveCriticalSection(&g_global_mutex);
+
+    return has_leaks;
 } 
