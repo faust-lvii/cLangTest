@@ -3,6 +3,7 @@
 
 #include <stddef.h>
 #include <stdbool.h>
+#include <windows.h>
 
 // Bellek havuzu yapılandırma sabitleri
 #define MM_POOL_INITIAL_SIZE (1024 * 1024)  // 1MB başlangıç boyutu
