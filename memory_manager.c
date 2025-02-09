@@ -151,12 +151,13 @@ mm_status_t mm_free(void* ptr) {
 
     size_t original_size = header->size;
     header->is_free = true;
-    g_stats.current_used -= original_size;
-    g_stats.total_frees++;
 
     // Bitişik boş blokları birleştir
+    size_t total_merged_size = original_size;
+
     if (header->next && header->next->is_free) {
-        header->size += HEADER_SIZE + header->next->size;
+        total_merged_size += HEADER_SIZE + header->next->size;
+        header->size = total_merged_size;
         header->next = header->next->next;
         if (header->next) {
             header->next->prev = header;
@@ -164,13 +165,19 @@ mm_status_t mm_free(void* ptr) {
     }
 
     if (header->prev && header->prev->is_free) {
-        header->prev->size += HEADER_SIZE + header->size;
+        total_merged_size += HEADER_SIZE + header->prev->size;
+        header->prev->size = total_merged_size;
         header->prev->next = header->next;
         if (header->next) {
             header->next->prev = header->prev;
         }
         header = header->prev;
+    } else {
+        header->size = total_merged_size;
     }
+
+    g_stats.current_used -= original_size;
+    g_stats.total_frees++;
 
     update_block_metadata(header);
     LeaveCriticalSection(&g_pools[0].mutex);
