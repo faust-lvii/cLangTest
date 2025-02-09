@@ -149,8 +149,9 @@ mm_status_t mm_free(void* ptr) {
         return MM_ERROR_INVALID_POINTER;
     }
 
+    size_t original_size = header->size;
     header->is_free = true;
-    g_stats.current_used -= header->size;
+    g_stats.current_used -= original_size;
     g_stats.total_frees++;
 
     // Bitişik boş blokları birleştir
